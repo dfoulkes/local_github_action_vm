@@ -1,0 +1,3 @@
+---
+- src: mesaguy.prometheus
+- src: githubixx.kubectl

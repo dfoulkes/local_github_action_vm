@@ -1,7 +1,5 @@
 ---
 # tasks file for buildAgent
-
-- name: copy the kube profile to the user directory.
-  ansible.builtin.copy:
-      src: .kube
-      dest: /home/vagrant/
+- include: kube-config.yml
+- include: github-runner.yml
+- include: pi-hole-action.yml

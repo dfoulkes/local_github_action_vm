@@ -42,7 +42,7 @@ Vagrant.configure(2) do |config|
       v.auto_start_action = "Start"
     end
   # REMEMBER!!! ADD PASSWORD FILE FOR THIS TO WORK.
-    config.vm.provision "file",  source: "./vault_password", destination: "/tmp/vault_password"
+    config.vm.provision "file", source: "./vault_password", destination: "/tmp/vault_password"
     config.vm.provision "shell", inline: $set_permissions_to_owner_only, run: "always"
 
     config.vm.provision "file", source: "./provision", destination: "/home/vagrant/"
@@ -54,7 +54,7 @@ Vagrant.configure(2) do |config|
         EOM
 
         buildagent.vm.provision "ansible_local" do |ansible|
-            ansible.verbose             = true
+            ansible.verbose             = "v"
             ansible.playbook            = 'provision/GitHubBuildAgent.yml' 
             ansible.galaxy_role_file    = 'provision/requirements.yml' 
             ansible.galaxy_roles_path   = '/etc/ansible/roles'

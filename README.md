@@ -19,7 +19,9 @@ find . -type f -printf "%h/\"%f\" " | xargs ansible-vault encrypt --vault-passwo
 
 ## Adding action listeners to the repositroy
 
-TODO
+The agent is installed in /opt/actions-runner.
+for each Github repository, you will need too add a new action file. Take the existing one as an example if you want to be able to install the service.
+
 
 ## Author
 Dan Foulkes 

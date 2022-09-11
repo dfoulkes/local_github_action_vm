@@ -2,3 +2,4 @@
 - src: mesaguy.prometheus
 - src: githubixx.kubectl
 - src: gantsign.helm
+- src: community.docker

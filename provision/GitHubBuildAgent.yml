@@ -15,12 +15,13 @@
     helm_version: '3.9.4'
     github_linux_runner_version: "2.296.1"
     github_action_installation_dir: "/opt/actions-runner"
-    # {{ github_api_url }}/repos/{{ github_owner | default(github_account) }}/{{ github_repo }}/actions/runners"
     # GitHub address
     github_runtime_user: vagrant
     github_url: "https://github.com"
     # GitHub API
     github_api_url: "https://api.github.com"
+
+    # encrypted github token requires local password to use.
     github_access_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           30303836643237633538393264366564326465303238313764303632653437613734376237613064

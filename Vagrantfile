@@ -42,7 +42,7 @@ Vagrant.configure(2) do |config|
       v.auto_start_action = "Start"
     end
   # REMEMBER!!! ADD PASSWORD FILE FOR THIS TO WORK.
-    config.vm.provision "file", source: "./vault_password", destination: "/tmp/vault_password"
+    config.vm.provision "file",  source: "./vault_password", destination: "/tmp/vault_password"
     config.vm.provision "shell", inline: $set_permissions_to_owner_only, run: "always"
 
     config.vm.provision "file", source: "./provision", destination: "/home/vagrant/"
@@ -61,6 +61,6 @@ Vagrant.configure(2) do |config|
             ansible.vault_password_file = "/tmp/vault_password"
         end     
     end    
-    config.vm.provision "shell", inline: $delete_password, run: "always"
+
 end
     

@@ -3,6 +3,7 @@
   roles:
     - role: githubixx.kubectl
     - role: buildAgent
+    - role: gantsign.helm
   vars:  
    # Where to install "kubectl" binary
     kubectl_bin_directory: "/usr/local/bin"
@@ -11,6 +12,7 @@
     # Owner of "kubectl" binary
     kubectl_owner: "root"
     kubectl_binary_mode: "0755"
-    
+    helm_version: '3.9.4'
+
   become: yes
   become_method: sudo 

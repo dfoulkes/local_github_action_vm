@@ -13,6 +13,25 @@
     kubectl_owner: "root"
     kubectl_binary_mode: "0755"
     helm_version: '3.9.4'
-
+    github_linux_runner_version: "2.296.1"
+    github_action_installation_dir: "/opt/actions-runner"
+    # {{ github_api_url }}/repos/{{ github_owner | default(github_account) }}/{{ github_repo }}/actions/runners"
+    # GitHub address
+    github_runtime_user: vagrant
+    github_url: "https://github.com"
+    # GitHub API
+    github_api_url: "https://api.github.com"
+    github_access_token: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30303836643237633538393264366564326465303238313764303632653437613734376237613064
+          3538346536316562623837636638383562623265663239380a343366636339613361383433323961
+          64613431613366666230643063626565373165623639616666656262316239633432363537396134
+          3565343161613565350a343461643364656662613932663836626664353662333137313265376234
+          66656161616337353332373736363530633539393363393534653430626430663736343233656535
+          3632366563343163666565643731613866353339376339323462
+    github_owner: "dfoulkes"
+    github_repo_pihole: "pihole-kubernetes"
+    pi_hole_agent_name: "PiHoleLocal"
+    pi_hole_runner_group: ""
   become: yes
   become_method: sudo 

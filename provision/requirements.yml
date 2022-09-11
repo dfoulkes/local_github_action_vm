@@ -1,4 +1,17 @@
 ---
-- src: mesaguy.prometheus
-- src: githubixx.kubectl
-- src: gantsign.helm
+
+  - name: geerlingguy.docker
+    src:  https://github.com/geerlingguy/ansible-role-docker
+    version: origin/master
+  
+  - name: mesaguy.prometheus
+    src : https://github.com/mesaguy/ansible-prometheus
+    version: origin/master
+
+  - name: githubixx.kubectl
+    src : https://github.com/githubixx/ansible-role-kubectl
+    version: origin/master
+
+  - name: gantsign.helm
+    src : https://github.com/gantsign/ansible_role_helm
+    version: origin/master

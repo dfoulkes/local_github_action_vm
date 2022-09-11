@@ -1,0 +1,12 @@
+---
+- name: create usergroup for docker
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: assign user to group
+  ansible.builtin.user: 
+     name: "{{ github_runtime_user }}"
+     groups: "{{ github_runtime_user }}, docker"
+     append: yes 
+  

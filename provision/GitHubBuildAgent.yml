@@ -1,6 +1,7 @@
 - name: install development environment with custom configuration for a dev machine
   hosts: all 
   roles:
+    - role: geerlingguy.docker
     - role: githubixx.kubectl
     - role: buildAgent
     - role: gantsign.helm

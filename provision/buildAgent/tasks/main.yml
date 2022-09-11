@@ -2,4 +2,5 @@
 # tasks file for buildAgent
 - include: kube-config.yml
 - include: github-runner.yml
+- include: add-vagrant-to-docker.yml
 - include: pi-hole-action.yml

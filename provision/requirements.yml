@@ -1,3 +1,4 @@
 ---
 - src: mesaguy.prometheus
 - src: githubixx.kubectl
+- src: gantsign.helm

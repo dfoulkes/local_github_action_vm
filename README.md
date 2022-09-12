@@ -22,6 +22,22 @@ find . -type f -printf "%h/\"%f\" " | xargs ansible-vault encrypt --vault-passwo
 The agent is installed in /opt/actions-runner.
 for each Github repository, you will need too add a new action file. Take the existing one as an example if you want to be able to install the service.
 
+## Current Repos
+
+
+| Repo          | Description                                                                                                                                                          | Source                                                                                         | Deployment Type |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |------------------------------------------------------------------------------------------------|-----------------|
+| Pi Hole       | A fork of the popular [MoJo2600/pihole-kubernetes](https://github.com/MoJo2600/pihole-kubernetes). with custom deploy scripts  that deploy via this VM using helm3.  | [https://github.com/dfoulkes/pihole-kubernetes](https://github.com/dfoulkes/pihole-kubernetes).|      helm3      |
+|               |                                                                                                                                                                      |                                                                                                |                 |   
+
+### Pi Hole
+
+
+#### Description
+A fork of the popular [MoJo2600/pihole-kubernetes](https://github.com/MoJo2600/pihole-kubernetes). with custom deploy scripts  that deploy via this VM using helm3.
+
+#### Source
+[https://github.com/dfoulkes/pihole-kubernetes](https://github.com/dfoulkes/pihole-kubernetes).
 
 ## Author
 Dan Foulkes 

@@ -1,0 +1,52 @@
+---
+- name: Set complete API url for repo runner
+  ansible.builtin.set_fact:
+     github_full_api_url: "{{ github_api_url }}/repos/{{ github_owner }}/{{ github_repo_k8s_monitoring }}/actions/runners"
+
+- name: Get registration token
+  ansible.builtin.uri:
+      url: "{{ github_full_api_url }}/registration-token"
+      headers:
+        Authorization: "token {{ github_access_token }}"
+        Accept: "application/vnd.github.v3+json"
+      method: POST
+      status_code: 201
+      force_basic_auth: yes
+  register: registration
+
+- name: make working directory for PiHole
+  file:
+      path: "{{ github_action_installation_dir }}/{{ github_repo_k8s_monitoring }}"
+      state: directory
+      owner: "{{ github_runtime_user }}"
+      group: "{{ github_runtime_user }}"
+
+- name: Check if runner service name file exist
+  ansible.builtin.stat:
+    path: "{{ github_action_installation_dir }}/.service"
+  register: runner_service_file_path
+
+- name: Run config script for pi hole action
+  ansible.builtin.command: "{{ github_action_installation_dir }}/config.sh --unattended --url https://github.com/{{ github_owner }}/{{ github_repo_k8s_monitoring }}  --token {{ registration.json.token }} --name {{ pi_hole_agent_name }} --work {{ github_action_installation_dir }}/{{ github_repo_k8s_monitoring }} --runasservice"
+  become_user: "{{ github_runtime_user }}"
+
+- name: install the runner for pihole as service
+  ansible.builtin.command: "{{ github_action_installation_dir }}/svc.sh install {{ github_runtime_user }}"
+  args:
+    chdir: "{{ github_action_installation_dir }}"
+  when: not runner_service_file_path.stat.exists  
+  become_method: sudo
+  become: true  
+
+- name: Read service name from file
+  ansible.builtin.slurp:
+    src: "{{ github_action_installation_dir }}/.service"
+  register: runner_service
+
+- name: START and enable Github Actions service
+  ansible.builtin.systemd:
+    name: "{{ runner_service.content | b64decode | replace('\n', '') }}"
+    state: started
+    enabled: yes
+  ignore_errors: "{{ ansible_check_mode }}"
+  become: true

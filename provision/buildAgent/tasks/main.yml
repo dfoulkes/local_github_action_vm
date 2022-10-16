@@ -4,3 +4,4 @@
 - include: github-runner.yml
 - include: add-vagrant-to-docker.yml
 - include: pi-hole-action.yml
+- include: k8s-monitor-action..yml

@@ -33,6 +33,10 @@
           3632366563343163666565643731613866353339376339323462
     github_owner: "dfoulkes"
     github_repo_pihole: "pihole-kubernetes"
+    github_repo_k8s_monitoring: "cluster-monitor"
+    
+    k8s_monitoring_agent_name: "k8smonLocal"
+   
     pi_hole_agent_name: "PiHoleLocal"
     pi_hole_runner_group: ""
   become: yes

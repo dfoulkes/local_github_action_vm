@@ -25,10 +25,12 @@ for each Github repository, you will need too add a new action file. Take the ex
 ## Current Repos
 
 
-| Repo          | Description                                                                                                                                                          | Source                                                                                         | Deployment Type |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |------------------------------------------------------------------------------------------------|-----------------|
-| Pi Hole       | A fork of the popular [MoJo2600/pihole-kubernetes](https://github.com/MoJo2600/pihole-kubernetes). with custom deploy scripts  that deploy via this VM using helm3.  | [https://github.com/dfoulkes/pihole-kubernetes](https://github.com/dfoulkes/pihole-kubernetes).|      helm3      |
-|               |                                                                                                                                                                      |                                                                                                |                 |   
+| Repo              | Description                                                                                                                                                          | Source                                                                                             | Deployment Type |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |----------------------------------------------------------------------------------------------------|-----------------|
+| Pi Hole           | A fork of the popular [MoJo2600/pihole-kubernetes](https://github.com/MoJo2600/pihole-kubernetes). with custom deploy scripts  that deploy via this VM using helm3.  | [https://github.com/dfoulkes/pihole-kubernetes](https://github.com/dfoulkes/pihole-kubernetes)     |      helm3      |
+| Kubenetes Monitor | A fork of the popular [carlosedp/cluster-monitoring](https://github.com/carlosedp/cluster-monitoring). with customisations for speedtest deployed using jsonlet      | [https://github.com/carlosedp/cluster-monitoring](https://github.com/carlosedp/cluster-monitoring) |     jsonlet     |   
+| Personal Blog     | A technical blog that uses Jykll to build a static website, helm to deploy on k3s with cloudflare on the edge for cyber protection                                   | [https://github.com/dfoulkes/personal-blog](https://github.com/dfoulkes/personal-blog)             |      helm3      |   
+
 
 ### Pi Hole
 

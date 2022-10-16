@@ -3,3 +3,28 @@
   ansible.builtin.copy:
       src: .kube
       dest: /home/vagrant/
+      
+- name: Make directory for action runner if not exist
+  file:
+      path: "{{ github_action_installation_dir }}"
+      state: directory
+      owner: "{{ github_runtime_user }}"
+      group: "{{ github_runtime_user }}"
+  become: true 
+
+- name: Download the runner binary
+  ansible.builtin.get_url:
+    url: "https://github.com/actions/runner/releases/download/v{{ github_linux_runner_version }}/actions-runner-linux-x64-{{ github_linux_runner_version }}.tar.gz"
+    dest: "{{ github_action_installation_dir }}/actions-runner-linux-{{ github_linux_runner_version }}.tar.gz"
+
+- name: Get sha256 of file
+  ansible.builtin.stat:
+    path: "{{ github_action_installation_dir }}/actions-runner-linux-{{ github_linux_runner_version }}.tar.gz"
+    checksum_algorithm: sha256
+    get_checksum: yes
+  register: sha256
+
+- name: Verify sha256sum of script before execution.
+  fail:
+    msg: "Failure, runner checksum does not match."
+  when: sha256.stat.checksum != 'bc943386c499508c1841bd046f78df4f22582325c5d8d9400de980cb3613ed3b'      

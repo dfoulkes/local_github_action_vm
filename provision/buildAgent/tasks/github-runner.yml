@@ -23,16 +23,4 @@
 - name: Verify sha256sum of script before execution.
   fail:
     msg: "Failure, runner checksum does not match."
-  when: sha256.stat.checksum != 'bc943386c499508c1841bd046f78df4f22582325c5d8d9400de980cb3613ed3b'
-
-- name: extract download into folder
-  ansible.builtin.unarchive:
-    src: "{{ github_action_installation_dir }}/actions-runner-linux-{{ github_linux_runner_version }}.tar.gz"
-    dest: "{{ github_action_installation_dir }}"
-    owner: "{{ github_runtime_user }}"
-    group: "{{ github_runtime_user }}"
-    
-- name: delete tar.gz after installation
-  ansible.builtin.file:
-    path: "{{ github_action_installation_dir }}/actions-runner-linux-{{ github_linux_runner_version }}.tar.gz"
-    state: absent       
+  when: sha256.stat.checksum != 'bc943386c499508c1841bd046f78df4f22582325c5d8d9400de980cb3613ed3b'   

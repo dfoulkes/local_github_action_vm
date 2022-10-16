@@ -2,7 +2,8 @@
 - name: Set complete API url for repo runner
   ansible.builtin.set_fact:
      github_full_api_url: "{{ github_api_url }}/repos/{{ github_owner }}/{{ github_repo_pihole }}/actions/runners"
-
+     install_dir: "{{ github_action_installation_dir }}/pi-hole"
+     
 - name: Get registration token
   ansible.builtin.uri:
       url: "{{ github_full_api_url }}/registration-token"
@@ -16,31 +17,38 @@
 
 - name: make working directory for PiHole
   file:
-      path: "{{ github_action_installation_dir }}/pi-hole"
+      path: "{{ install_dir }}"
       state: directory
       owner: "{{ github_runtime_user }}"
       group: "{{ github_runtime_user }}"
 
+- name: extract download into folder
+  ansible.builtin.unarchive:
+    src: "{{ github_action_installation_dir }}/actions-runner-linux-{{ github_linux_runner_version }}.tar.gz"
+    dest: "{{ install_dir }}"
+    owner: "{{ github_runtime_user }}"
+    group: "{{ github_runtime_user }}"
+    
 - name: Check if runner service name file exist
   ansible.builtin.stat:
-    path: "{{ github_action_installation_dir }}/.service"
+    path: "{{ install_dir }}/.service"
   register: runner_service_file_path
 
 - name: Run config script for pi hole action
-  ansible.builtin.command: "{{ github_action_installation_dir }}/config.sh --unattended --url https://github.com/{{ github_owner }}/{{ github_repo_pihole }}  --token {{ registration.json.token }} --name {{ pi_hole_agent_name }} --work {{ github_action_installation_dir }}/pi-hole --runasservice"
+  ansible.builtin.command: "{{ install_dir }}/config.sh --unattended --url https://github.com/{{ github_owner }}/{{ github_repo_pihole }}  --token {{ registration.json.token }} --name {{ pi_hole_agent_name }} --work {{ github_action_installation_dir }}/pi-hole --runasservice"
   become_user: "{{ github_runtime_user }}"
 
 - name: install the runner for pihole as service
-  ansible.builtin.command: "{{ github_action_installation_dir }}/svc.sh install {{ github_runtime_user }}"
+  ansible.builtin.command: "{{ install_dir }}/svc.sh install {{ github_runtime_user }}"
   args:
-    chdir: "{{ github_action_installation_dir }}"
+    chdir: "{{ install_dir }}"
   when: not runner_service_file_path.stat.exists  
   become_method: sudo
   become: true  
 
 - name: Read service name from file
   ansible.builtin.slurp:
-    src: "{{ github_action_installation_dir }}/.service"
+    src: "{{ install_dir }}/.service"
   register: runner_service
 
 - name: START and enable Github Actions service

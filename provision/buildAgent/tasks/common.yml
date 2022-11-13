@@ -1,0 +1,14 @@
+---
+
+- name: Upgrade all apt packages
+  apt: upgrade=dist force_apt_get=yes update_cache=yes cache_valid_time=3600
+  become: true 
+
+- name: add common libs
+  apt:
+      name:
+       - jq
+      state: latest
+      update_cache: yes 
+  become: true    
+      

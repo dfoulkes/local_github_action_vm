@@ -1,5 +1,6 @@
 ---
 # tasks file for buildAgent
+- include: common.yml
 - include: kube-config.yml
 - include: github-runner.yml
 - include: add-vagrant-to-docker.yml

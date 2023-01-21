@@ -3,6 +3,10 @@
   ansible.builtin.copy:
       src: .kube
       dest: /home/vagrant/
+      owner: "{{ github_runtime_user }}"
+      group: "{{ github_runtime_user }}"
+      directory_mode: 0400
+      mode:  0400
       
 - name: Make directory for action runner if not exist
   file:

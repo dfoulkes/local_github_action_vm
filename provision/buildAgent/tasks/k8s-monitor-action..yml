@@ -22,6 +22,19 @@
       owner: "{{ github_runtime_user }}"
       group: "{{ github_runtime_user }}"
 
+- name: check if already installed
+  ansible.builtin.stat:
+    path: "{{ github_action_installation_dir }}/{{ github_repo_k8s_monitoring }}/svc.sh"
+  register: monitoring_already_installed
+  become: true
+
+- name: remove the existing service
+  ansible.builtin.command:
+     chdir: "{{ github_action_installation_dir }}/{{ github_repo_k8s_monitoring }}"
+     cmd: "./svc.sh uninstall"
+  become: true
+  when: monitoring_already_installed.stat.exists
+
 - name: extract download into folder
   ansible.builtin.unarchive:
     src: "{{ github_action_installation_dir }}/actions-runner-linux-{{ github_linux_runner_version }}.tar.gz"
@@ -33,6 +46,11 @@
   ansible.builtin.stat:
     path: "{{ install_dir }}/.service"
   register: runner_service_file_path
+
+- name: disconnect from github
+  ansible.builtin.command: "{{ github_action_installation_dir }}/{{ github_repo_k8s_monitoring }}/config.sh remove --token {{ registration.json.token }}"
+  become_user: "{{ github_runtime_user }}"
+  when: monitoring_already_installed.stat.exists
 
 - name: Run config script for monitor action
   ansible.builtin.command: "{{ install_dir }}/config.sh --unattended --url https://github.com/{{ github_owner }}/{{ github_repo_k8s_monitoring }}  --token {{ registration.json.token }} --name {{ k8s_monitoring_agent_name }} --work {{ github_action_installation_dir }}/{{ github_repo_k8s_monitoring }} --runasservice"

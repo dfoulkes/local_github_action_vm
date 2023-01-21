@@ -22,6 +22,28 @@
       owner: "{{ github_runtime_user }}"
       group: "{{ github_runtime_user }}"
 
+- name: "debug the path"
+  debug:
+      msg: "{{ github_action_installation_dir }}/{{ github_repo_k8s_blog }}"
+
+- name: check if already installed
+  ansible.builtin.stat:
+    path: "{{ github_action_installation_dir }}/{{ github_repo_k8s_blog }}/svc.sh"
+  register: blog_already_installed
+  become: true
+
+- name: remove the existing service
+  ansible.builtin.command: 
+    chdir: "{{ github_action_installation_dir }}/{{ github_repo_k8s_blog }}"
+    cmd: "./svc.sh uninstall"
+  become: true
+  when: blog_already_installed.stat.exists
+
+- name: disconnect from github
+  ansible.builtin.command: "{{ github_action_installation_dir }}/{{ github_repo_k8s_blog }}/config.sh remove --token {{ registration.json.token }}"
+  become_user: "{{ github_runtime_user }}"
+  when: blog_already_installed.stat.exists
+
 - name: extract download into folder
   ansible.builtin.unarchive:
     src: "{{ github_action_installation_dir }}/actions-runner-linux-{{ github_linux_runner_version }}.tar.gz"

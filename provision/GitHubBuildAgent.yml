@@ -3,9 +3,36 @@
   roles:
     - role: geerlingguy.docker
     - role: githubixx.kubectl
-    - role: buildAgent
     - role: gantsign.helm
-  vars:  
+    - role: christiangda.awscli
+    - role: christiangda.awscli_configure
+    - role: buildAgent
+  vars:
+    awscliconf_path: '/home/vagrant'
+    awscliconf_files_owner: 'vagrant'
+    awscliconf_files_group: 'vagrant'  
+    awscliconf_files:
+            credentials:
+              - default:
+                  aws_access_key_id: !vault |
+                                      $ANSIBLE_VAULT;1.1;AES256
+                                      63333764383066376461383037363036366337613862626662396439616261366337386266303635
+                                      3663663366356236643234333166316233616134383337350a643331366561343561383737663561
+                                      65613363323233313162656339623661616634316538396364316339303531336439343136346133
+                                      3332616138323537640a336233613065326361343132346536356634356136376262376633396231
+                                      66313862333235646334396231626538303130376361303561636361333866366339
+                  aws_secret_access_key: !vault |
+                                          $ANSIBLE_VAULT;1.1;AES256
+                                          65326664303436313361333161323739363434336137323734333333386337626331653061353330
+                                          3637303763346438343634636132393539663063396333300a386532343035323930303736636663
+                                          38616134623432353633663265613934653463316165326235313464633431396165353035623961
+                                          3136386364316236380a666261613033353937373262333565383438393665643332633530383033
+                                          65623238646466353636363735656434393530313962356232356630316265383730373033633838
+                                          6637643035386161356637306561356139316666373566656631
+            config:
+              - default:
+                  region: eu-west-1
+                  output: yaml
    # Where to install "kubectl" binary
     kubectl_bin_directory: "/usr/local/bin"
     # Directory to store the kubectl archive

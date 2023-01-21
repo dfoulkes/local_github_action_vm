@@ -21,6 +21,25 @@
       state: directory
       owner: "{{ github_runtime_user }}"
       group: "{{ github_runtime_user }}"
+    
+
+- name: check if already installed
+  ansible.builtin.stat:
+    path: "{{ github_action_installation_dir }}/pi-hole/svc.sh"
+  register: pi_hole
+  become: true
+
+- name: remove the existing service
+  ansible.builtin.command: 
+    chdir: "{{ github_action_installation_dir }}/pi-hole"
+    cmd : "./svc.sh uninstall"
+  become: true
+  when: pi_hole.stat.exists
+
+- name: disconnect from github
+  ansible.builtin.command: "{{ github_action_installation_dir }}/pi-hole/config.sh remove --token {{ registration.json.token }}"
+  become_user: "{{ github_runtime_user }}"
+  when: pi_hole.stat.exists
 
 - name: extract download into folder
   ansible.builtin.unarchive:
@@ -28,12 +47,12 @@
     dest: "{{ install_dir }}"
     owner: "{{ github_runtime_user }}"
     group: "{{ github_runtime_user }}"
-    
+
 - name: Check if runner service name file exist
   ansible.builtin.stat:
     path: "{{ install_dir }}/.service"
   register: runner_service_file_path
-
+             
 - name: Run config script for pi hole action
   ansible.builtin.command: "{{ install_dir }}/config.sh --unattended --url https://github.com/{{ github_owner }}/{{ github_repo_pihole }}  --token {{ registration.json.token }} --name {{ pi_hole_agent_name }} --work {{ github_action_installation_dir }}/pi-hole --runasservice"
   become_user: "{{ github_runtime_user }}"

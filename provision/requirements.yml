@@ -15,3 +15,11 @@
   - name: gantsign.helm
     src : https://github.com/gantsign/ansible_role_helm
     version: origin/master
+
+  - name: christiangda.awscli 
+    src : https://github.com/dfoulkes/ansible-role-awscli
+    version: origin/master  
+
+  - name: christiangda.awscli_configure 
+    src : https://github.com/christiangda/ansible-role-awscli-configure
+    version: origin/master   

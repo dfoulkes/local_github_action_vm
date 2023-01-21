@@ -1,0 +1,17 @@
+---
+
+- name: Install Helm S3 Plugin
+  kubernetes.core.helm_plugin:
+    plugin_version: v0.14.0
+    plugin_path: https://github.com/hypnoglow/helm-s3
+    state: present
+
+- name: Add a repository
+  kubernetes.core.helm_repository:
+    name: "{{ item.key }} "
+    repo_url: "{{ item.value }}"
+  loop: "{{ repositories | dict2items }}"  
+  vars:
+        repositories:
+            metallb : "s3://df-helmchart-repo/charts/metallb"
+            blog    : "s3://df-helmchart-repo/charts/blog"

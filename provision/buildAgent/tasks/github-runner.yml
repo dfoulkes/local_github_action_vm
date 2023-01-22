@@ -20,7 +20,15 @@
     get_checksum: yes
   register: sha256
 
+- name: DEBUG validate checksum from file
+  debug:
+    msg: sha256.stat.checksum
+
+- name: DEBUG Expected Checksum
+  debug:
+    msg: "{{ github_linux_runner_checksum }}"
+
 - name: Verify sha256sum of script before execution.
   fail:
     msg: "Failure, runner checksum does not match."
-  when: sha256.stat.checksum != 'bc943386c499508c1841bd046f78df4f22582325c5d8d9400de980cb3613ed3b'   
+  when: sha256.stat.checksum != "{{ github_linux_runner_checksum }}"

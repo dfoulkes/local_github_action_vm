@@ -4,4 +4,4 @@ ansi
 .idea
 terraform.tfstate
 env
-venv
+venv/**

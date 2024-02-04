@@ -45,6 +45,7 @@
   ansible.builtin.unarchive:
     src: "{{ github_action_installation_dir }}/actions-runner-linux-{{ github_linux_runner_version }}.tar.gz"
     dest: "{{ install_dir }}"
+    remote_src: true
     owner: "{{ github_runtime_user }}"
     group: "{{ github_runtime_user }}"
 

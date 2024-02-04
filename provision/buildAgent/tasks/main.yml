@@ -1,10 +1,14 @@
 ---
 # tasks file for buildAgent
-- include: common.yml
-- include: kube-config.yml
-- include: github-runner.yml
-- include: add-vagrant-to-docker.yml
-- include: pi-hole-action.yml
-- include: k8s-monitor-action.yml
-- include: k8s-blog-action.yml
-- include: helm-config.yml
+- ansible.builtin.include_tasks: common.yml
+- ansible.builtin.include_tasks: kube-config.yml
+- ansible.builtin.include_tasks: github-runner.yml
+- ansible.builtin.include_tasks: add-vagrant-to-docker.yml
+- ansible.builtin.include_tasks: pi-hole-action.yml
+- ansible.builtin.include_tasks: k8s-monitor-action.yml
+- ansible.builtin.include_tasks: k8s-blog-action.yml
+- ansible.builtin.include_tasks: k8s-grafana-action.yml
+- ansible.builtin.include_tasks: k8s-prometheus-action.yml
+- ansible.builtin.include_tasks: k8s-kube-state-metrics-action.yml
+- ansible.builtin.include_tasks: k8s-node-export-action.yml
+- ansible.builtin.include_tasks: helm-config.yml

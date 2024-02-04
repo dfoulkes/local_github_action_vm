@@ -41,6 +41,44 @@ A fork of the popular [MoJo2600/pihole-kubernetes](https://github.com/MoJo2600/p
 #### Source
 [https://github.com/dfoulkes/pihole-kubernetes](https://github.com/dfoulkes/pihole-kubernetes).
 
+
+# Proxmox & Terraform
+
+## Cloud Init Setup 
+
+### Proxmox Server Tools Required
+
+``` 
+apt install libguestfs-tools -y
+```
+
+### Download base Image
+
+```
+wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
+```
+### Install Guest Agent
+``` 
+virt-customize -a focal-server-cloudimg-amd64.img --install qemu-guest-agent
+```
+
+### qm Properties
+```
+qm create 9000 --name "ubuntu-2204-cloudinit-template" --memory 4096 --cores 2 --net0 virtio,bridge=vmbr0
+qm importdisk 9000 focal-server-cloudimg-amd64.img local-zfs
+qm set 9000 --scsihw virtio-scsi-pci --scsi0 local-zfs:vm-9000-disk-0
+qm set 9000 --boot c --bootdisk scsi0
+qm set 9000 --ide2 local-zfs:cloudinit
+qm set 9000 --serial0 socket --vga serial0
+qm set 9000 --agent enabled=1
+```
+
+### Create Template
+```
+qm template 9000
+```
+
+
 ## Author
 Dan Foulkes 
 11/09/2022

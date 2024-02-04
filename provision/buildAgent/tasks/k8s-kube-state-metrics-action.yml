@@ -1,0 +1,84 @@
+---
+- name: Setup variables
+  ansible.builtin.set_fact:
+     github_full_api_url: "{{ github_api_url }}/repos/{{ github_owner }}/{{ github_repo_kube_state_metrics }}/actions/runners"
+     install_dir: "{{ github_action_installation_dir }}/{{ github_repo_kube_state_metrics }}"
+
+- name: Get registration token
+  ansible.builtin.uri:
+      url: "{{ github_full_api_url }}/registration-token"
+      headers:
+        Authorization: "token {{ github_access_token }}"
+        Accept: "application/vnd.github.v3+json"
+      method: POST
+      status_code: 201
+      force_basic_auth: yes
+  register: registration
+
+- name: make working directory for kube state metrics
+  file:
+      path: "{{ install_dir }}"
+      state: directory
+      owner: "{{ github_runtime_user }}"
+      group: "{{ github_runtime_user }}"
+      mode: "0755"
+
+- name: "debug the path"
+  debug:
+      msg: "{{ github_action_installation_dir }}/{{ github_repo_kube_state_metrics }}"
+
+- name: check if already installed
+  ansible.builtin.stat:
+    path: "{{ github_action_installation_dir }}/{{ github_repo_kube_state_metrics }}/svc.sh"
+  register: service_already_installed
+  become: true
+
+- name: remove the existing service
+  ansible.builtin.command: 
+    chdir: "{{ github_action_installation_dir }}/{{ github_repo_kube_state_metrics }}"
+    cmd: "./svc.sh uninstall"
+  become: true
+  when: service_already_installed.stat.exists
+
+- name: disconnect from github
+  ansible.builtin.command: "{{ github_action_installation_dir }}/{{ github_repo_kube_state_metrics }}/config.sh remove --token {{ registration.json.token }}"
+  become_user: "{{ github_runtime_user }}"
+  when: service_already_installed.stat.exists
+
+- name: extract download into folder
+  ansible.builtin.unarchive:
+    src: "{{ github_action_installation_dir }}/actions-runner-linux-{{ github_linux_runner_version }}.tar.gz"
+    dest: "{{ install_dir }}"
+    remote_src: true
+    owner: "{{ github_runtime_user }}"
+    group: "{{ github_runtime_user }}"
+
+- name: Check if runner service name file exist for the kube state metrics action
+  ansible.builtin.stat:
+    path: "{{ install_dir }}/.service"
+  register: runner_service_file_path
+
+- name: Run config script for kube state metrics action
+  ansible.builtin.command: "{{ install_dir }}/config.sh --unattended --url https://github.com/{{ github_owner }}/{{ github_repo_kube_state_metrics }}  --token {{ registration.json.token }} --name {{ k8s_agent_name }} --work {{ github_action_installation_dir }}/{{ github_repo_kube_state_metrics }} --runasservice"
+  become_user: "{{ github_runtime_user }}"
+
+- name: install the runner for kube state metrics as service
+  ansible.builtin.command: "{{ install_dir }}/svc.sh install {{ github_runtime_user }}"
+  args:
+    chdir: "{{ install_dir }}"
+  when: not runner_service_file_path.stat.exists  
+  become_method: sudo
+  become: true  
+
+- name: Read service name from file
+  ansible.builtin.slurp:
+    src: "{{ install_dir }}/.service"
+  register: runner_service
+
+- name: START and enable Github Actions service
+  ansible.builtin.systemd:
+    name: "{{ runner_service.content | b64decode | replace('\n', '') }}"
+    state: started
+    enabled: yes
+  ignore_errors: "{{ ansible_check_mode }}"
+  become: true

@@ -2,12 +2,30 @@
 - name: copy the kube profile to the user directory.
   ansible.builtin.copy:
       src: .kube
-      dest: /home/vagrant/
+      dest: /home/ubuntu/
       owner: "{{ github_runtime_user }}"
       group: "{{ github_runtime_user }}"
-      directory_mode: 0400
-      mode:  0400
-      
+      directory_mode: 770
+      mode:  770
+
+- name: set permissions on directory and subfiles for .kube
+  ansible.builtin.file:
+      path: /home/ubuntu/.kube
+      owner: "{{ github_runtime_user }}"
+      group: "{{ github_runtime_user }}"
+      mode:  770
+      recurse: yes
+  become: true
+
+- name: change permission of the folder and subfiles for .kube to the runtime user
+  ansible.builtin.file:
+      path: /home/ubuntu/.kube
+      owner: "{{ github_runtime_user }}"
+      group: "{{ github_runtime_user }}"
+      mode:  770
+      recurse: yes
+  become: true    
+
 - name: Make directory for action runner if not exist
   file:
       path: "{{ github_action_installation_dir }}"
@@ -28,7 +46,7 @@
     get_checksum: yes
   register: sha256
 
-- name: Verify sha256sum of script before execution.
-  fail:
-    msg: "Failure, runner checksum does not match."
-  when: sha256.stat.checksum != 'bc943386c499508c1841bd046f78df4f22582325c5d8d9400de980cb3613ed3b'      
+# - name: Verify sha256sum of script before execution.
+#   fail:
+#     msg: "Failure, runner checksum does not match."
+#   when: sha256.stat.checksum != 'bc943386c499508c1841bd046f78df4f22582325c5d8d9400de980cb3613ed3b'      

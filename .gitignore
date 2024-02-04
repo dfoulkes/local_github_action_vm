@@ -2,3 +2,6 @@
 vault_password
 ansi
 .idea
+terraform.tfstate
+env
+venv

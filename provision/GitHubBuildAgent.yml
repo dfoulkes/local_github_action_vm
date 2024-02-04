@@ -2,15 +2,20 @@
   hosts: all 
   roles:
     - role: geerlingguy.docker
+      when: destroy == false
     - role: githubixx.kubectl
+      when: destroy == false
     - role: gantsign.helm
+      when: destroy == false
     - role: christiangda.awscli
+      when: destroy == false
     - role: christiangda.awscli_configure
+      when: destroy == false
     - role: buildAgent
   vars:
-    awscliconf_path: '/home/vagrant'
-    awscliconf_files_owner: 'vagrant'
-    awscliconf_files_group: 'vagrant'  
+    awscliconf_path: '/home/ubuntu'
+    awscliconf_files_owner: 'ubuntu'
+    awscliconf_files_group: 'ubuntu'  
     awscliconf_files:
             credentials:
               - default:
@@ -34,17 +39,24 @@
                   region: eu-west-1
                   output: yaml
    # Where to install "kubectl" binary
+    kubectl_version: "1.28.5"
     kubectl_bin_directory: "/usr/local/bin"
+    kubectl_checksum_archive: "sha512:9cd61a97b37cb27cc565f5a2cebd6086b86148c5759eb0e6a0c03e7be4b701bec407c46a65633c51a00a7aa74733c2fdd082b9da3382d38525e2e5b8dbb11b77"
+    kubectl_checksum_binary: "sha512:https://cdn.dl.k8s.io/release/v{{ kubectl_version }}/bin/{{ kubectl_os }}/{{ kubectl_arch }}/kubectl.sha512"
+    kubectl_os: "linux"
+    kubectl_arch: "amd64"
     # Directory to store the kubectl archive
     kubectl_tmp_directory: "{{ lookup('env', 'TMPDIR') | default('/tmp',true) }}"
     # Owner of "kubectl" binary
     kubectl_owner: "root"
+    destroy: false
     kubectl_binary_mode: "0755"
     helm_version: '3.9.4'
-    github_linux_runner_version: "2.296.1"
+    github_linux_runner_version: "2.312.0"
+    github_linux_runner_checksum: "85c1bbd104d539f666a89edef70a18db2596df374a1b51670f2af1578ecbe031"
     github_action_installation_dir: "/opt/actions-runner"
     # GitHub address
-    github_runtime_user: vagrant
+    github_runtime_user: ubuntu
     github_url: "https://github.com"
     # GitHub API
     github_api_url: "https://api.github.com"
@@ -52,17 +64,23 @@
     # encrypted github token requires local password to use.
     github_access_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256
-          35653062316135613364383432326564623636393332326331303333326463656138663930303961
-          3361333630363436376335653230333038386231356432660a383536396562323733366339633330
-          61313261386230623365373936396230633937646466653939303366313133636331313132336231
-          3032376530656464310a613865653337346665373166633237303866616666316634646134303339
-          38343439616363393639363262326539386631326664326130376462613938393132396138343433
-          3031323064366238366238666432303335323562316137376536
+          30306432316335356338356638343633326261383735633632346565323831316435653563323861
+          3030326363356639613331613864633032633966363731330a303930316635396463386162646238
+          35343139623565616338393965623966373334616565336635623563396533323461363338646565
+          3837343036306566330a396164376234316632356166326331333938646532633865383238626136
+          39656337383863323565383337663033326534373864346639303838303561613535363265363265
+          3661303031366432383566633362613539653937386665333166
     github_owner: "dfoulkes"
     github_repo_pihole: "pihole-kubernetes"
     github_repo_k8s_monitoring: "cluster-monitor"
     github_repo_k8s_blog: "personal-blog"
+    github_repo_grafana: "grafana"
+    github_repo_prometheus: "prometheus"
+    github_repo_node_exporter: "node-exporter"
+    github_repo_kube_state_metrics: "kube-state-metrics"
+    github_repo_speed_test: "speed-test"
 
+    k8s_agent_name: "homeagent"
     k8s_blog_agent_name: "blogLocal"
     k8s_monitoring_agent_name: "k8smonLocal"
     pi_hole_agent_name: "PiHoleLocal"

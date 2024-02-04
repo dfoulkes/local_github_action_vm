@@ -1,2 +1,42 @@
----
 # handlers file for buildAgent
+---
+  - name: stop blog
+    ansible.builtin.service:
+      name: actions.runner.dfoulkes-personal-blog.blogLocal.service
+      state: stopped
+    listen: "stop services"
+    become: true
+
+  - name: stop monitoring
+    ansible.builtin.service:
+      name: actions.runner.dfoulkes-cluster-monitor.k8smonLocal.service
+      state: stopped
+    listen: "stop services"
+    become: true
+
+  - name: stop pihole
+    ansible.builtin.service:
+      name: actions.runner.dfoulkes-pihole-kubernetes.PiHoleLocal.service
+      state: stopped
+    listen: "stop services"
+    become: true
+
+  ## Unregister the handler with Github
+
+  - name: unregister blog
+    ansible.builtin.service:
+      name: memcached
+      state: restarted
+    become: true
+
+  - name: unregister monitoring
+    ansible.builtin.service:
+      name: memcached
+      state: restarted
+    become: true
+
+  - name: unregister pihole
+    ansible.builtin.service:
+      name: memcached
+      state: restarted
+    become: true

@@ -45,7 +45,7 @@ Vagrant.configure(2) do |config|
     config.vm.provision "file", source: "./vault_password", destination: "/tmp/vault_password"
     config.vm.provision "shell", inline: $set_permissions_to_owner_only, run: "always"
 
-    config.vm.provision "file", source: "./provision", destination: "/home/vagrant/"
+    config.vm.provision "file", source: "./provision", destination: "/home/ubuntu/"
     config.vm.provision "shell", inline: $install_ansible, run: "always"
     config.vm.define "github_build_agent" do |buildagent|
       buildagent.vm.provision 'preemptively give others write access to /etc/ansible/roles', type: :shell, inline: <<~'EOM'
